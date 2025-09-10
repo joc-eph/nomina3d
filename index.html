@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Horas de Empleado</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Calculadora de Horas Laborales</h1>
+        </div>
+
+        <div class="info-card">
+            <h2 class="text-xl">Información Importante</h2>
+            <p><strong>Jornada Completa:</strong> 8 horas</p>
+            <p><strong>Descanso Diario:</strong> 30 minutos (se descontará automáticamente del tiempo total trabajado, si este es mayor a 30 minutos)</p>
+            <p><strong>Horas Extra:</strong> Cualquier hora trabajada por encima de la jornada de 8 horas. Se pagan a 1.5 veces el valor de la hora normal.</p>
+            <p><strong>Día Sábado:</strong> Todas las horas trabajadas se consideran horas extras y se pagan a 1.5 veces el valor de la hora normal.</p>
+        </div>
+        
+        <div class="bg-gray-100 p-6 rounded-lg mb-6 shadow-sm">
+            <label for="salario-diario" class="block text-sm font-medium text-gray-700">Salario Diario (Jornada de 8h):</label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span class="text-gray-500 sm:text-sm">$</span>
+                </div>
+                <input type="number" id="salario-diario" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" min="0">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="horario-table">
+                <thead>
+                    <tr>
+                        <th>Día</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Horas Normales</th>
+                        <th>Horas Extras</th>
+                        <th>Pago Diario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas para cada día de la semana, se generarán con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="results-container grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="result-box total">
+                <h3>Total Horas Normales</h3>
+                <p id="total-horas-normales" class="text-3xl font-bold mt-2">0</p>
+            </div>
+            <div class="result-box total">
+                <h3>Total Horas Extras</h3>
+                <p id="total-horas-extras" class="text-3xl font-bold mt-2">0</p>
+            </div>
+            <div class="result-box total">
+                <h3>Pago Semanal Estimado</h3>
+                <p id="pago-semanal-resultado" class="text-3xl font-bold mt-2">$0.00</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

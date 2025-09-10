@@ -1,0 +1,101 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+    color: #333;
+}
+.container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+.info-card {
+    background-color: #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+.info-card h2 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.table-container {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+th, td {
+    padding: 12px;
+    text-align: center;
+}
+th {
+    background-color: #4b5563;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px 8px 0 0;
+}
+.alternate-row td {
+    background-color: #f3f4f6; /* Ligeramente gris */
+}
+td {
+    background-color: #f9fafb; /* Color principal */
+    border: 1px solid #e5e7eb;
+}
+td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.time-selects {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+.time-selects select {
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 70px; /* Adjust for better visibility */
+}
+.time-selects select:focus {
+    border-color: #3b82f6;
+}
+.results-container {
+    margin-top: 2rem;
+}
+.result-box {
+    background-color: #d1fae5;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    text-align: center;
+}
+.result-box.total {
+    background-color: #c7d2fe;
+}
+.result-box h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+}
