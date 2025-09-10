@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Horas de Empleado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .info-card {
+            background-color: #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .info-card h2 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #4b5563;
+            color: white;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0;
+        }
+        .alternate-row td {
+            background-color: #f3f4f6; /* Ligeramente gris */
+        }
+        td {
+            background-color: #f9fafb; /* Color principal */
+            border: 1px solid #e5e7eb;
+        }
+        td:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+        td:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        .time-selects {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+        }
+        .time-selects select {
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 70px; /* Adjust for better visibility */
+        }
+        .time-selects select:focus {
+            border-color: #3b82f6;
+        }
+        .results-container {
+            margin-top: 2rem;
+        }
+        .result-box {
+            background-color: #d1fae5;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .result-box.total {
+            background-color: #c7d2fe;
+        }
+        .result-box h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Calculadora de Horas Laborales</h1>
+        </div>
+
+        <div class="info-card">
+            <h2 class="text-xl">Información Importante</h2>
+            <p><strong>Jornada Completa:</strong> 8 horas</p>
+            <p><strong>Descanso Diario:</strong> 30 minutos (se descontará automáticamente del tiempo total trabajado, si este es mayor a 30 minutos)</p>
+            <p><strong>Horas Extra:</strong> Cualquier hora trabajada por encima de la jornada de 8 horas. Se pagan a 1.5 veces el valor de la hora normal.</p>
+            <p><strong>Día Sábado:</strong> Todas las horas trabajadas se consideran horas extras y se pagan a 1.5 veces el valor de la hora normal.</p>
+        </div>
+        
+        <div class="bg-gray-100 p-6 rounded-lg mb-6 shadow-sm">
+            <label for="salario-diario" class="block text-sm font-medium text-gray-700">Salario Diario (Jornada de 8h):</label>
+            <div class="mt-1 relative rounded-md shadow-sm">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span class="text-gray-500 sm:text-sm">$</span>
+                </div>
+                <input type="number" id="salario-diario" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" min="0">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="horario-table">
+                <thead>
+                    <tr>
+                        <th>Día</th>
+                        <th>Entrada</th>
+                        <th>Salida</th>
+                        <th>Horas Normales</th>
+                        <th>Horas Extras</th>
+                        <th>Pago Diario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Filas para cada día de la semana, se generarán con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="results-container grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="result-box total">
+                <h3>Total Horas Normales</h3>
+                <p id="total-horas-normales" class="text-3xl font-bold mt-2">0</p>
+            </div>
+            <div class="result-box total">
+                <h3>Total Horas Extras</h3>
+                <p id="total-horas-extras" class="text-3xl font-bold mt-2">0</p>
+            </div>
+            <div class="result-box total">
+                <h3>Pago Semanal Estimado</h3>
+                <p id="pago-semanal-resultado" class="text-3xl font-bold mt-2">$0.00</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript logic for the calculation
+        const days = ['Sábado', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+        const tableBody = document.getElementById('horario-table').querySelector('tbody');
+        const salarioInput = document.getElementById('salario-diario');
+        const totalHorasNormalesEl = document.getElementById('total-horas-normales');
+        const totalHorasExtrasEl = document.getElementById('total-horas-extras');
+        const pagoSemanalEl = document.getElementById('pago-semanal-resultado');
+
+        // Function to convert 12-hour AM/PM to 24-hour format
+        function convertTo24Hour(hour, period) {
+            if (period === 'PM' && hour !== 12) {
+                return hour + 12;
+            } else if (period === 'AM' && hour === 12) {
+                return 0;
+            }
+            return hour;
+        }
+
+        // Function to calculate hour difference based on hours, minutes, and AM/PM
+        function calculateHours(startHour, startMinute, startPeriod, endHour, endMinute, endPeriod) {
+            const start24Hour = convertTo24Hour(startHour, startPeriod);
+            const end24Hour = convertTo24Hour(endHour, endPeriod);
+
+            let startTotalMinutes = (start24Hour * 60) + startMinute;
+            let endTotalMinutes = (end24Hour * 60) + endMinute;
+
+            if (endTotalMinutes < startTotalMinutes) {
+                // If end time is on the next day
+                endTotalMinutes += 24 * 60;
+            }
+
+            const diffMinutes = endTotalMinutes - startTotalMinutes;
+            return diffMinutes / 60;
+        }
+
+        // Function to update the calculations
+        function updateCalculations() {
+            let totalNormalHours = 0;
+            let totalExtraHours = 0;
+            let totalWeeklyPay = 0;
+            const salarioDiario = parseFloat(salarioInput.value);
+            
+            // Check if a salary value has been entered
+            const isSalarioEntered = !isNaN(salarioDiario) && salarioDiario > 0;
+            const hourValue = isSalarioEntered ? salarioDiario / 8 : 0;
+
+            days.forEach((day, index) => {
+                const entradaHoraSelect = document.getElementById(`entrada-hora-${index}`);
+                const salidaHoraSelect = document.getElementById(`salida-hora-${index}`);
+                
+                const horasNormalesCell = document.getElementById(`horas-normales-${index}`);
+                const horasExtrasCell = document.getElementById(`horas-extras-${index}`);
+                const pagoDiarioCell = document.getElementById(`pago-diario-${index}`);
+                
+                // If either entrada or salida hour is not selected, skip this day's calculation
+                if (!entradaHoraSelect.value || !salidaHoraSelect.value) {
+                    horasNormalesCell.textContent = "0";
+                    horasExtrasCell.textContent = "0";
+                    pagoDiarioCell.textContent = "---";
+                    return; // Skip to the next iteration of the loop
+                }
+
+                const entradaHora = parseInt(entradaHoraSelect.value);
+                const entradaMinuto = parseInt(document.getElementById(`entrada-minuto-${index}`).value);
+                const entradaPeriodo = document.getElementById(`entrada-periodo-${index}`).value;
+                const salidaHora = parseInt(salidaHoraSelect.value);
+                const salidaMinuto = parseInt(document.getElementById(`salida-minuto-${index}`).value);
+                const salidaPeriodo = document.getElementById(`salida-periodo-${index}`).value;
+
+                let dailyNormalHours = 0;
+                let dailyExtraHours = 0;
+                let dailyPay = 0;
+                let dailyTotalHours = 0;
+
+                let workedHours = calculateHours(entradaHora, entradaMinuto, entradaPeriodo, salidaHora, salidaMinuto, salidaPeriodo);
+                
+                // Subtract 30 minutes for break, only if worked more than 30 minutes
+                if (workedHours > 0.5) {
+                    workedHours -= 0.5;
+                }
+                dailyTotalHours = Math.max(0, workedHours);
+
+                // Calculate daily pay based on the day
+                if (day === 'Sábado') {
+                    // All Saturday hours are extra hours, regardless of the amount.
+                    dailyNormalHours = 0;
+                    dailyExtraHours = dailyTotalHours;
+                    const saturdayExtraHourValue = hourValue * 1.5;
+                    dailyPay = dailyExtraHours * saturdayExtraHourValue;
+                } else {
+                    // Original logic for other days
+                    if (dailyTotalHours > 8) {
+                        dailyNormalHours = 8;
+                        dailyExtraHours = dailyTotalHours - 8;
+                    } else {
+                        dailyNormalHours = dailyTotalHours;
+                        dailyExtraHours = 0;
+                    }
+                    const extraHourValue = hourValue * 1.5;
+                    dailyPay = (dailyNormalHours * hourValue) + (dailyExtraHours * extraHourValue);
+                }
+
+                horasNormalesCell.textContent = dailyNormalHours.toFixed(2);
+                horasExtrasCell.textContent = dailyExtraHours.toFixed(2);
+                
+                // Display daily pay, or a placeholder if no salary is entered
+                if (isSalarioEntered) {
+                  pagoDiarioCell.textContent = `$${dailyPay.toFixed(2)}`;
+                  totalWeeklyPay += dailyPay;
+                } else {
+                  pagoDiarioCell.textContent = "---";
+                }
+
+                totalNormalHours += dailyNormalHours;
+                totalExtraHours += dailyExtraHours;
+            });
+            
+            // Show total results
+            totalHorasNormalesEl.textContent = totalNormalHours.toFixed(2) + " h";
+            totalHorasExtrasEl.textContent = totalExtraHours.toFixed(2) + " h";
+            
+            // Display total weekly pay, or a placeholder if no salary is entered
+            if (isSalarioEntered) {
+              pagoSemanalEl.textContent = `$${totalWeeklyPay.toFixed(2)}`;
+            } else {
+              pagoSemanalEl.textContent = "---";
+            }
+        }
+
+        // Generate the table dynamically
+        days.forEach((day, index) => {
+            const rowClass = index % 2 === 0 ? '' : 'alternate-row';
+            let hourOptions = '<option value="" disabled selected>--</option>';
+            for (let i = 1; i <= 12; i++) {
+                hourOptions += `<option value="${i}">${i}</option>`;
+            }
+            
+            let minuteOptions = '<option value="" disabled selected>--</option>';
+            for (let i = 0; i < 60; i++) {
+                const minute = String(i).padStart(2, '0');
+                minuteOptions += `<option value="${i}">${minute}</option>`;
+            }
+
+            const row = document.createElement('tr');
+            row.className = rowClass;
+            row.innerHTML = `
+                <td class="font-semibold text-gray-700">${day}</td>
+                <td>
+                    <div class="time-selects">
+                        <select id="entrada-hora-${index}">${hourOptions}</select>:<select id="entrada-minuto-${index}">${minuteOptions}</select>
+                        <select id="entrada-periodo-${index}"><option value="AM">AM</option><option value="PM">PM</option></select>
+                    </div>
+                </td>
+                <td>
+                    <div class="time-selects">
+                        <select id="salida-hora-${index}">${hourOptions}</select>:<select id="salida-minuto-${index}">${minuteOptions}</select>
+                        <select id="salida-periodo-${index}"><option value="AM">AM</option><option value="PM" selected>PM</option></select>
+                    </div>
+                </td>
+                <td id="horas-normales-${index}">0</td>
+                <td id="horas-extras-${index}">0</td>
+                <td id="pago-diario-${index}">---</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        // Add listeners to detect changes in inputs
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', updateCalculations);
+        });
+        salarioInput.addEventListener('input', updateCalculations);
+
+        // Initial call to set up the view
+        updateCalculations();
+
+    </script>
+
+</body>
+</html>
